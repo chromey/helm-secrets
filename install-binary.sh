@@ -63,7 +63,8 @@ else
             if [ "$(get_sha_256 /tmp/sops)" == "${SOPS_LINUX_SHA}" ];
             then
                 chmod +x /tmp/sops
-                mv /tmp/sops /usr/local/bin/
+                # mv /tmp/sops /usr/local/bin/
+                export PATH="$PATH:/tmp"
             else
                 echo -e "${RED}Wrong SHA256${NOC}"
             fi
