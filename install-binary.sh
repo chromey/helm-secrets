@@ -49,25 +49,14 @@ else
             brew install sops
     elif [ "$(uname)" == "Linux" ];
     then
-        if which dpkg;
+        curl -sL "${SOPS_LINUX_URL}" > /tmp/sops
+        if [ "$(get_sha_256 /tmp/sops)" == "${SOPS_LINUX_SHA}" ];
         then
-            curl -sL "${SOPS_DEB_URL}" > /tmp/sops
-            if [ "$(get_sha_256 /tmp/sops)" == "${SOPS_DEB_SHA}" ];
-            then
-                sudo dpkg -i /tmp/sops;
-            else
-                echo -e "${RED}Wrong SHA256${NOC}"
-            fi
+            chmod +x /tmp/sops
+            # mv /tmp/sops /usr/local/bin/
+            export PATH="$PATH:/tmp"
         else
-            curl -sL "${SOPS_LINUX_URL}" > /tmp/sops
-            if [ "$(get_sha_256 /tmp/sops)" == "${SOPS_LINUX_SHA}" ];
-            then
-                chmod +x /tmp/sops
-                # mv /tmp/sops /usr/local/bin/
-                export PATH="$PATH:/tmp"
-            else
-                echo -e "${RED}Wrong SHA256${NOC}"
-            fi
+            echo -e "${RED}Wrong SHA256${NOC}"
         fi
         rm /tmp/sops 2>/dev/null || true
     else
